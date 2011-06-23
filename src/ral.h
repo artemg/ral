@@ -32,7 +32,7 @@ struct file_driver_t{
     int (* uncompress)(char *dest, size_t *destLen, const char *source, size_t sourceLen);
 };
 
-enum drivers_t {STDZC, GZZ, LZOZ};
+enum drivers_t {RAL_STDC, RAL_GZ, RAL_LZO};
 struct file_driver_t *getDriver(enum drivers_t d);
 
 #ifdef __cplusplus
