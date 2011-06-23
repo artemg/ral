@@ -1,2 +1,2 @@
-bin_PROGRAMS = foobar
-foobar_SOURCES = foobar.cpp
+bin_PROGRAMS = main
+main_SOURCES = main.c
