@@ -23,12 +23,12 @@ int check_cmp(struct file_driver_t *d, const size_t size){
     size_t out_len = size;
 
     buf_rnd(in, size);
-    if( d->compress(tmp, &tmp_len, in, size) != RAL_OK ){
+    if( d->compress(tmp, &tmp_len, in, size, NULL) != RAL_OK ){
         test_name = "compress";
         FAIL;
         goto err;
     }
-    if( d->uncompress(out, &out_len, tmp, tmp_len) != RAL_OK ){
+    if( d->uncompress(out, &out_len, tmp, tmp_len, NULL) != RAL_OK ){
         test_name = "uncompress";
         FAIL;
         goto err;

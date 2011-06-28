@@ -57,8 +57,12 @@ size_t f_reg_write(fd_t *fd_, char *buf, size_t size){
     return fwrite(buf, 1, size, fd);
 }
 
-enum ral_status f_reg_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen){
+enum ral_status f_reg_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param){
+    if( *destLen < sourceLen ){
+        return RAL_EBUFFER_TOO_SMALL;
+    }
     memmove(dest, source, (*destLen < sourceLen)? *destLen : sourceLen);
+    *destLen = sourceLen;
     return RAL_OK;
 }
 

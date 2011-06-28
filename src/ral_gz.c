@@ -56,17 +56,46 @@ size_t f_gz_write(fd_t *fd, char *buf, size_t size){
     return gzwrite(fd, buf, size);
 }
 
-enum ral_status f_gz_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen){
-    if( compress((Bytef *) dest, (uLongf *)destLen, (const Bytef *) source, sourceLen) != Z_OK){
-        return RAL_ERROR;
+enum ral_status f_gz_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param){
+    enum ral_status ret;
+    int res = compress((Bytef *) dest, (uLongf *)destLen, (const Bytef *) source, sourceLen);
+    switch (res){
+        case Z_OK:
+            ret = RAL_OK;
+            break;
+        case Z_BUF_ERROR:
+            ret = RAL_EBUFFER_TOO_SMALL;
+            break;
+        case Z_MEM_ERROR:
+            ret = RAL_ENOT_ENOUGH_MEM;
+            break;
+        default:
+            ret = RAL_EUNKNOWN;
+            break;
     }
-    return RAL_OK;
-}
-enum ral_status f_gz_uncompress(char *dest, size_t *destLen, const char *source, size_t sourceLen){
-    if( uncompress((Bytef *) dest, (uLongf *)destLen, (const Bytef *) source, sourceLen) != Z_OK){
-        return RAL_ERROR;
-    }
-    return RAL_OK;
+    return ret;
 }
 
+enum ral_status f_gz_uncompress(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param){
+    enum ral_status ret;
+    int res = uncompress((Bytef *) dest, (uLongf *)destLen, (const Bytef *) source, sourceLen);
+    switch (res){
+        case Z_OK:
+            ret = RAL_OK;
+            break;
+        case Z_BUF_ERROR:
+            ret = RAL_EBUFFER_TOO_SMALL;
+            break;
+        case Z_MEM_ERROR:
+            ret = RAL_ENOT_ENOUGH_MEM;
+            break;
+        case Z_DATA_ERROR:
+            ret = RAL_EINVALID_INPUT;
+            break;
+        default:
+            ret = RAL_EUNKNOWN;
+            break;
+    }
+    return ret;
+}
 

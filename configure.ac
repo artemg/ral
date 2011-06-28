@@ -89,6 +89,36 @@ AS_IF([test "x$with_zlib" = "xyes"], [
     AC_DEFINE(HAVE_GZ)
 ])
 
+dnl
+dnl Get bzip2 library and include locations
+dnl
+
+AC_ARG_WITH([bzip2],
+  [AS_HELP_STRING([--with-bzip2], [bzip2 support])],
+  [],
+  [with_bzip2=yes])
+
+if test "x${with_bzip2}" = "xyes"; then
+    have_bzip2=no
+    AC_SEARCH_LIBS([BZ2_bzBuffToBuffCompress], [bz2], [have_bzip2=yes])
+
+    if test "x${have_bzip2}" = xyes; then
+        AC_CHECK_HEADERS([bzlib.h], [], [have_bzip2=no])
+    fi
+
+    if test "x${have_bzip2}" = xno; then
+        AC_MSG_WARN([
+------------------------------------
+Unable to find bzip2 on this system.
+Building without it.
+------------------------------------])
+        with_bzip2=no
+    fi
+fi
+
+if test "x${with_bzip2}" = xyes; then
+    AC_DEFINE([HAVE_BZIP])
+fi
 
 
 dnl Output

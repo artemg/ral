@@ -70,17 +70,17 @@ static struct file_driver_t ral_driver_snappy = {
 };
 #endif
 
-#ifdef HAVE_BZIP2
-#include "ral_bzip2.h"
-static struct file_driver_t ral_driver_bzip2 = {
-    &f_bzip2_open,
-    &f_bzip2_close,
-    &f_bzop2_seek,
-    &f_bzip2_tell,
-    &f_bzip2_read,
-    &f_bzip2_write,
-    &f_bzip2_compress,
-    &f_bzip2_uncompress    
+#ifdef HAVE_BZIP
+#include "ral_bzip.h"
+static struct file_driver_t ral_driver_bzip = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    &f_bzip_compress,
+    &f_bzip_uncompress    
 };
 #endif
 
@@ -107,9 +107,9 @@ struct file_driver_t *get_driver(enum drivers_t d){
             ret = &ral_driver_snappy;
             break;
 #endif
-#ifdef HAVE_BZIP2
-        case RAL_BZIP2:
-            ret = &ral_driver_bzip2;
+#ifdef HAVE_BZIP
+        case RAL_BZIP:
+            ret = &ral_driver_bzip;
             break;
 #endif
         default:
