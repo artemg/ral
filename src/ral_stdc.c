@@ -1,5 +1,6 @@
 #include "ral_stdc.h"
 #include <stdio.h>
+#include <string.h>
 
 fd_t *f_reg_open(const char *fname, int mode, void *params){
     FILE *loc_fd = NULL;
@@ -54,5 +55,10 @@ size_t f_reg_read(fd_t *fd_, char *buf, size_t size){
 size_t f_reg_write(fd_t *fd_, char *buf, size_t size){
     FILE *fd = (FILE *)fd_;
     return fwrite(buf, 1, size, fd);
+}
+
+enum ral_status f_reg_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen){
+    memmove(dest, source, (*destLen < sourceLen)? *destLen : sourceLen);
+    return RAL_OK;
 }
 

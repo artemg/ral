@@ -21,6 +21,11 @@ enum file_driver_seek_modes {
 };
 typedef void fd_t;
 
+enum ral_status{
+    RAL_OK,
+    RAL_ERROR
+};
+
 struct file_driver_t{
     fd_t *(* open)(const char *fname, int mode, void *params);
     int (* close)(fd_t *fd);
@@ -28,13 +33,14 @@ struct file_driver_t{
     off_t (* tell)(fd_t *fd);
     size_t(* read)(fd_t *fd, char *buf, size_t size);
     size_t(* write)(fd_t *fd, char *buf, size_t size);
-    int (* compress)(char *dest, size_t *destLen, const char *source, size_t sourceLen);
-    int (* uncompress)(char *dest, size_t *destLen, const char *source, size_t sourceLen);
+    enum ral_status (* compress)(char *dest, size_t *destLen, const char *source, size_t sourceLen);
+    enum ral_status (* uncompress)(char *dest, size_t *destLen, const char *source, size_t sourceLen);
 };
 
-enum drivers_t {RAL_STDC, RAL_GZ, RAL_LZO};
-struct file_driver_t *getDriver(enum drivers_t d);
-
+static const char *driver_names[] = {"STDC", "GZ", "LZO", "SNAPPY", "BZIP2", "UNKNOWN"};
+enum drivers_t {RAL_STDC, RAL_GZ, RAL_LZO, RAL_SNAPPY, RAL_BZIP2, RAL_END};
+struct file_driver_t *get_driver(enum drivers_t d);
+const char *get_driver_name(enum drivers_t);
 #ifdef __cplusplus
 }
 #endif 
