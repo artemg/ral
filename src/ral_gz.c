@@ -56,7 +56,7 @@ size_t f_gz_write(fd_t *fd, char *buf, size_t size){
     return gzwrite(fd, buf, size);
 }
 
-int f_fz_ferror(fd_t *fd){
+int f_gz_ferror(fd_t *fd){
     int res;
     gzerror(fd, &res);
     if( res == Z_ERRNO )
