@@ -8,9 +8,9 @@ fd_t *f_reg_open(const char *fname, int mode, void *params){
 
     if( fname == NULL )
         return NULL;
-    if( mode & FD_READ ){
+    if( mode & RAL_READ ){
         loc_mode = "r";
-    } else if ( mode & FD_WRITE ){
+    } else if ( mode & RAL_WRITE ){
         loc_mode = "w+";
     }
     return fopen(fname, loc_mode);
@@ -20,18 +20,18 @@ int f_reg_close(fd_t *fd_){
     return fclose(fd);
 }
 
-off_t  f_reg_seek(fd_t *fd_, size_t offset, int whence){
+off_t  f_reg_seek(fd_t *fd_, size_t offset, enum file_driver_seek_modes whence){
     int loc_whence;
     FILE *fd = (FILE *)fd_;
 
     switch (whence){
-        case FD_SEEK_SET:
+        case RAL_SEEK_SET:
             loc_whence = SEEK_SET;
             break;
-        case FD_SEEK_END:
+        case RAL_SEEK_END:
             loc_whence = SEEK_END;
             break;
-        case FD_SEEK_CUR:
+        case RAL_SEEK_CUR:
             loc_whence = SEEK_CUR;
             break;
         default:
@@ -55,6 +55,16 @@ size_t f_reg_read(fd_t *fd_, char *buf, size_t size){
 size_t f_reg_write(fd_t *fd_, char *buf, size_t size){
     FILE *fd = (FILE *)fd_;
     return fwrite(buf, 1, size, fd);
+}
+
+int f_reg_feof(fd_t *fd_){
+    FILE *fd = (FILE *)fd_;
+    return feof(fd);
+}
+
+int f_reg_ferror(fd_t *fd_){
+    FILE *fd = (FILE *)fd_;
+    return ferror(fd);
 }
 
 enum ral_status f_reg_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param){

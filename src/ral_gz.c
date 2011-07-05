@@ -10,9 +10,9 @@ fd_t *f_gz_open(const char *fname, int mode, void *params){
     if( fname == NULL ){
         return NULL;
     }
-    if( mode & FD_READ ){
+    if( mode & RAL_READ ){
         loc_mode = "r";
-    } else if ( mode & FD_WRITE ){
+    } else if ( mode & RAL_WRITE ){
         loc_mode = "w+";
     }
 
@@ -27,14 +27,14 @@ int f_gz_close(fd_t *fd){
     return gzclose(fd);
 }
 
-off_t  f_gz_seek(fd_t *fd, size_t offset, int whence){
+off_t  f_gz_seek(fd_t *fd, size_t offset, enum file_driver_seek_modes whence){
     int loc_whence;
 
     switch (whence){
-        case FD_SEEK_SET:
+        case RAL_SEEK_SET:
             loc_whence = SEEK_SET;
             break;
-        case FD_SEEK_CUR:
+        case RAL_SEEK_CUR:
             loc_whence = SEEK_CUR;
             break;
         default:
@@ -54,6 +54,19 @@ size_t f_gz_read(fd_t *fd, char *buf, size_t size){
 
 size_t f_gz_write(fd_t *fd, char *buf, size_t size){
     return gzwrite(fd, buf, size);
+}
+
+int f_fz_ferror(fd_t *fd){
+    int res;
+    gzerror(fd, &res);
+    if( res == Z_ERRNO )
+        return 0;
+    else
+        return 1;
+}
+
+int f_gz_feof(fd_t *fd){
+    return gzeof(fd);
 }
 
 enum ral_status f_gz_compress(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param){

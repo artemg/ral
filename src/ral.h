@@ -10,14 +10,14 @@ extern "C" {
 // Compressed file abstraction layer
 
 enum file_driver_open_modes {
-    FD_READ  = 0x01,
-    FD_WRITE = 0x02
+    RAL_READ  = 0x01,
+    RAL_WRITE = 0x02
 };
 
 enum file_driver_seek_modes {
-    FD_SEEK_SET,
-    FD_SEEK_END,
-    FD_SEEK_CUR
+    RAL_SEEK_SET,
+    RAL_SEEK_END,
+    RAL_SEEK_CUR
 };
 typedef void fd_t;
 
@@ -30,12 +30,16 @@ enum ral_status{
 };
 
 struct file_driver_t{
+    // unstable
     fd_t *(* open)(const char *fname, int mode, void *params);
     int (* close)(fd_t *fd);
     off_t (* seek)(fd_t *fd, size_t offset, int whence);
     off_t (* tell)(fd_t *fd);
     size_t(* read)(fd_t *fd, char *buf, size_t size);
     size_t(* write)(fd_t *fd, char *buf, size_t size);
+    int (* feof)(fd_t *fd);
+    int (* ferror)(fd_t *fd);
+
     enum ral_status (* compress)(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param);
     enum ral_status (* uncompress)(char *dest, size_t *destLen, const char *source, size_t sourceLen, void *param);
 };

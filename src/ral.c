@@ -10,6 +10,8 @@ static struct file_driver_t ral_driver_stdc = {
     &f_reg_tell,
     &f_reg_read,
     &f_reg_write,
+    &f_reg_feof,
+    &f_reg_ferror,
     &f_reg_compress,
     &f_reg_uncompress
 };
@@ -24,6 +26,8 @@ static struct file_driver_t ral_driver_gz = {
     &f_gz_tell,
     &f_gz_read,
     &f_gz_write,
+    &f_gz_feof,
+    &f_gz_ferror,
     &f_gz_compress,
     &f_gz_uncompress
 };
@@ -38,27 +42,19 @@ static struct file_driver_t ral_driver_lzo = {
     NULL,
     NULL,
     NULL,
+    NULL,
+    NULL,
     &f_lzo_compress,
     &f_lzo_uncompress
 };
-/*
-static struct file_driver_t ral_driver_lzo = {
-    &f_lzo_open,
-    &f_lzo_close,
-    &f_lzo_seek,
-    &f_lzo_tell,
-    &f_lzo_read,
-    &f_lzo_write,
-    &f_lzo_compress,
-    &f_lzo_uncompress
-};
-*/
 #endif
 
 #ifdef HAVE_SNAPPY
 #include "ral_snappy.h"
 // there is no default snappy file format
 static struct file_driver_t ral_driver_snappy = {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -73,6 +69,8 @@ static struct file_driver_t ral_driver_snappy = {
 #ifdef HAVE_BZIP
 #include "ral_bzip.h"
 static struct file_driver_t ral_driver_bzip = {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
